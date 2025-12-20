@@ -4,11 +4,11 @@ import {
   Grid,
   IconButton,
   Typography,
-  ToggleButtonGroup,
   ToggleButton,
+  ToggleButtonGroup,
 } from "@mui/material";
 import "./App.css";
-import { useColorScheme, useTheme } from "@mui/material/styles";
+import { useColorScheme, useTheme, styled } from "@mui/material/styles";
 import Logo from "./assets/images/logo.svg?react";
 import SunIcon from "./assets/images/icon-sun.svg?react";
 import MoonIcon from "./assets/images/icon-moon.svg?react";
@@ -21,6 +21,72 @@ const images = import.meta.glob("./assets/images/*.svg", {
   eager: true,
   query: "?url",
   import: "default",
+});
+
+const StyledToggleButton = styled(ToggleButton)(({ theme, mode = "light" }) => {
+  return {
+    padding: "0.375rem 1.25rem",
+    "&&&": {
+      borderRadius: "1.5rem",
+      margin: 0,
+      border: "0.0625rem solid",
+      borderColor: theme.palette.special.borderHover,
+    },
+    fontWeight: 400,
+    fontSize: "1rem",
+    textTransform: "none",
+    backgroundColor:
+      mode === "dark"
+        ? theme.palette.background.paper
+        : theme.palette.background.default,
+    color: theme.palette.text.secondary,
+    boxShadow:
+      mode === "dark" ? "none" : "0 0.125rem 0.3125rem hsl(0deg 0% 78% / 33%)",
+    "&&": {
+      "&.Mui-selected": {
+        backgroundColor:
+          mode === "dark"
+            ? theme.palette.primary.main
+            : theme.palette.primary.dark,
+        color: theme.palette.special.activeButton,
+        fontSize: "1.125rem",
+        fontWeight: 500,
+
+        "&:not(:focus)": {
+          borderColor: theme.palette.primary.main,
+        },
+
+        "&:hover": {
+          backgroundColor:
+            mode === "dark"
+              ? theme.palette.primary.light
+              : theme.palette.primary.dark,
+          opacity: mode === "dark" ? 1 : 0.8,
+        },
+      },
+    },
+
+    "&&&:focus": {
+      borderWidth: "0.125rem",
+      borderColor: theme.palette.background.default,
+      outline: "0.125rem solid",
+      outlineColor: theme.palette.primary.main,
+      "&:not(.Mui-selected)": {
+        backgroundColor:
+          mode === "dark"
+            ? theme.palette.special.iconHover
+            : theme.palette.background.default,
+      },
+    },
+
+    "&:hover": {
+      backgroundColor:
+        mode === "dark"
+          ? theme.palette.special.iconHover
+          : theme.palette.background.default,
+      opacity: mode === "dark" ? 1 : 0.65,
+    },
+  };
 });
 
 function App() {
@@ -76,57 +142,6 @@ function App() {
       prev.filter((ext) => ext.name !== deletedExtension)
     );
     handleClose();
-  };
-
-  //  Styles
-
-  const toggleButtonsStyles = {
-    gap: "1rem",
-    "& .MuiToggleButton-root": {
-      padding: "0.375rem 1.25rem",
-      borderRadius: "1.5rem",
-      margin: 0,
-      fontWeight: 400,
-      fontSize: "1rem",
-      textTransform: "none",
-      backgroundColor:
-        mode === "dark" ? "background.paper" : "background.default",
-      color: "text.secondary",
-      border: "0.0625rem solid",
-      borderColor: "special.borderHover",
-      boxShadow:
-        mode === "dark"
-          ? "none"
-          : "0 0.125rem 0.3125rem hsl(0deg 0% 78% / 33%)",
-      "&:focus": {
-        borderWidth: "0.125rem",
-        borderColor: "background.default",
-        outline: "0.125rem solid",
-        outlineColor: "primary.main",
-        "&:not(.Mui-selected)": {
-          backgroundColor:
-            mode === "dark" ? "special.iconHover" : "background.default",
-        },
-      },
-      "&:hover": {
-        backgroundColor:
-          mode === "dark" ? "special.iconHover" : "background.default",
-        opacity: mode === "dark" ? 1 : 0.65,
-      },
-      "&.Mui-selected": {
-        backgroundColor: mode === "dark" ? "primary.main" : "primary.dark",
-        color: "special.activeButton",
-        fontSize: "1.125rem",
-        fontWeight: 500,
-        "&:not(:focus)": {
-          borderColor: "primary.main",
-        },
-        "&:hover": {
-          backgroundColor: mode === "dark" ? "primary.light" : "primary.dark",
-          opacity: mode === "dark" ? 1 : 0.8,
-        },
-      },
-    },
   };
 
   return (
@@ -218,11 +233,17 @@ function App() {
                 exclusive
                 onChange={handleChange}
                 aria-label="section"
-                sx={toggleButtonsStyles}
+                sx={{ gap: "1rem" }}
               >
-                <ToggleButton value="all">All</ToggleButton>
-                <ToggleButton value="active">Active</ToggleButton>
-                <ToggleButton value="inactive">Inactive</ToggleButton>
+                <StyledToggleButton value="all" mode={mode}>
+                  All
+                </StyledToggleButton>
+                <StyledToggleButton value="active" mode={mode}>
+                  Active
+                </StyledToggleButton>
+                <StyledToggleButton value="inactive" mode={mode}>
+                  Inactive
+                </StyledToggleButton>
               </ToggleButtonGroup>
             </Grid>
           </Grid>
